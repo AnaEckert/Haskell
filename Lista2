@@ -1,0 +1,126 @@
+import Data.Char
+
+nprimeiros 0 (x:xs) = [] 
+
+nprimeiros n [] = [] 
+
+nprimeiros n (x:xs) = x:nprimeiros (n-1) xs 
+
+
+-- 1 
+
+pertence n [] = False 
+pertence n (x:xs) | n == x = True 
+                  | otherwise = pertence n xs 
+
+-- 2 
+
+intercessao [] _ = [] 
+intercessao (x:xs) ys | pertence x ys = x:intercessao xs ys 
+                      | otherwise = intercessao xs ys 
+
+-- 3 
+
+inverso [] = [] 
+inverso (x:xs) = inverso xs ++ [x] 
+
+-- 4 
+
+nUltimos e [] = [] 
+nUltimos 0 _ = [] 
+nUltimos e (x:xs) = inverso (nprimeiros e (inverso xs)) 
+
+-- 5 
+
+soma2 [] [] = [] 
+soma2 [] _ = [] 
+soma2 _ [] = [] 
+soma2 (x:xs) (y:ys) = x+y:soma2 xs ys 
+
+-- 6 
+
+pot2' 1 = [2] 
+pot2' n = 2 ^ n:pot2' (n-1)
+pot2 n = inverso (pot2' n) 
+
+-- 7 
+
+intercalacao [] [] = [] 
+intercalacao [] ls = ls 
+intercalacao ls [] = ls 
+intercalacao (x:xs) (y:ys) | x == y = intercalacao xs (y:ys) 
+                           | x < y = x:intercalacao xs (y:ys) 
+                           | otherwise = y:intercalacao (x:xs) ys 
+
+-- 8 
+
+menor [] = error "lista vazia" 
+menor [e] = e
+menor (x:xs) | x < menor xs = x 
+             | otherwise = menor xs 
+
+-- 9 
+
+removerElem e [] = [] 
+removerElem e (x:xs) | e == x = xs 
+                     | otherwise = x:removerElem e xs 
+
+-- 10 
+
+ordenar [] = [] 
+ordenar [e] = [e] 
+ordenar (x:xs) | x < menor xs = x:ordenar xs 
+               | otherwise = menor xs:ordenar (removerElem (menor xs) (x:xs)) 
+
+
+-- 11 
+
+ins e [] = [e] 
+ins e l@(x:xs) | e == x = l 
+               | e < x = e:l 
+               | otherwise = x: ins e xs 
+
+-- 12 
+
+enesimo 0 (x:xs) = error "não há"
+enesimo 1 (x:xs) = x 
+enesimo n (x:xs) = enesimo (n-1) xs 
+
+-- 13 
+
+repetir 0 e = [] 
+repetir n e = e:repetir (n-1) e 
+
+-- ord :: Char —> Int 
+
+-- chr :: Int —> Char 
+
+-- 14 
+
+numString' 0 = [] 
+numString' n = let x = rem n 10 
+               in chr(x+48) : numString' (div n 10) -- tabela ascii binário 
+numString n = inverso (numString' n) 
+
+-- 15 
+
+stringNum [] = 0 
+stringNum (x:xs) = let n = (ord x) - 48 
+                   in n * 10 ^ (length xs) + stringNum xs 
+
+-- 16 
+aux 0 e = 0 
+aux x e = (rem x 10) * 2^e + aux (div x 10)  (e+1) 
+bin2int ls = let y = stringNum ls 
+             in aux y 0 
+
+
+-- 17 
+auxil 0 = [] 
+auxil n = chr((rem n 2) + 48):auxil (div n 2)
+int2bin x = let y = auxil x 
+            in inverso y 
+            
+-- 18 
+minusculas [] = [] 
+minusculas (x:xs) = toLower x:minusculas xs 
