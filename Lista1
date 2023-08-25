@@ -1,0 +1,35 @@
+--Exercício1
+ehTriangulo a b c = if a < b + c && b < a + c && c < a + b then True 
+                    else False
+
+--Exercício 2
+tipoTriangulo a b c = if a == b && a == c then "Equilatero"
+                      else if a == b || a == c || b == c then "Isocesles"
+                           else "Escaleno"
+                           
+--Exercício 3
+triangulo a b c = if ehTriangulo a b c == True then tipoTriangulo a b c
+                  else "Nao eh triangulo"
+  
+--Exercício 4
+somaPares1 0 = 0
+somaPares1 n = n + somaPares1 (n-2)
+  
+somaPares n = if rem n 2 == 0 then somaPares1 n
+              else somaPares1 (n-1)
+
+--Exercício 5
+somaPot2m m 0 = m
+somaPot2m m n = m *(2 ^ n) + somaPot2m m (n-1)
+  
+--Exercício 6
+primo' n 1 = True
+primo' n d = if rem n d == 0 then False
+             else primo' n (d-1)
+primo n = primo' n (n-1)
+  
+--Exercício 7
+seriePi a = seriePi' a 1 1
+
+seriePi' a n s = if 4/n > a then s * (4/n) + seriePi' a (n+2) (-s)
+                 else 0
