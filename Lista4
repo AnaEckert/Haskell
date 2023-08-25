@@ -1,0 +1,52 @@
+import System.IO
+import Data.List
+import Data.Char
+
+-- passando a frase pra minuscula 
+
+minusculos [] = []
+minusculos (x:xs) = toLower x:minusculos xs 
+
+-- b 
+aux n [] = []
+aux n (x:xs) = (n,x):aux (n+1) xs
+numLines [] = []
+numLines (x:xs) = aux 1 (x:xs)
+
+--c 
+
+allNumWords' n [] = [] 
+allNumWords' n (x:xs) = (n,x): allNumWords' n xs 
+
+allNumWords [] = [] 
+allNumWords ((n,l):xs) = allNumWords' n (words l) ++ allNumWords xs
+
+-- d 
+inverte [] = []
+inverte ((a,b):xs) = (b,a):inverte xs 
+
+sortLs [] = []
+sortLs xs = inverte (sort (inverte xs))  
+
+-- e 
+amalgamate [] = [] 
+amalgamate ((n,w): xs) = ([a |(a,b) <- ((n,w):xs) , b == w] , w):amalgamate ([(a,b) | (a,b) <- xs, b /= w] )
+
+-- f 
+aux' [] = [] 
+aux' (x:xs) = x:aux' [a | a <- xs, a /= x] 
+
+shorten [] = []
+shorten ((ls,w):xs) = (aux' ls, w):shorten xs   
+
+ -- lendo arquivo musica 
+main = do putStr "Arquivo: "
+          arq <- getLine
+          txt <- readFile arq
+          putStr txt 
+          
+          -- imprimindo a, b e c 
+          
+          let nc = lines (minusculos txt) --separa o documento em linhas
+          let nl = (shorten (amalgamate (sortLs (allNumWords (numLines nc))))) -- numera as linhas
+          putStr ("Ocorrencias das palavras nas linhas: " ++ show nl ++ "\n")
