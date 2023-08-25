@@ -1,0 +1,64 @@
+import System.IO
+import Data.List
+import Data.Char
+import Data.String
+
+type Word' = String
+data Tree = Node Word' [Int] Tree Tree | Leaf deriving Show
+
+-- passando a frase pra minuscula 
+
+minusculos [] = []
+minusculos (x:xs) = toLower x:minusculos xs 
+
+-- b 
+aux n [] = []
+aux n (x:xs) = (n,x):aux (n+1) xs
+numLines [] = []
+numLines (x:xs) = aux 1 (x:xs)
+
+--c 
+
+allNumWords' n [] = [] 
+allNumWords' n (x:xs) = (n,x): allNumWords' n xs 
+
+allNumWords [] = [] 
+allNumWords ((n,l):xs) = allNumWords' n (words l) ++ allNumWords xs
+
+-- d 
+insOrd e [] = [e] 
+insOrd e l@(x:xs) | e == x = l 
+                  | e < x = e:l 
+                  | otherwise = x: insOrd e xs
+                
+-- e  
+ins :: (Int, Word') -> Tree -> Tree             
+ins (a,b) Leaf = Node b [a] Leaf Leaf 
+ins (a,b) (Node x ls esq dir) | compare b x == EQ = Node x (insOrd a ls) esq dir 
+                              | compare b x == LT = Node x ls (ins (a,b) esq) dir 
+                              | otherwise = Node x ls esq (ins (a,b) dir) 
+                            
+-- f 
+aux2 [] tree = tree
+aux2 ((a,b):xs) tree = aux2 xs (ins (a,b) tree)                      
+mIndexTree ls = aux2 ls Leaf
+
+
+ -- lendo arquivo musica 
+main = do putStr "Arquivo: "
+          arq <- getLine
+          txt <- readFile arq
+          putStr (txt ++ "\n")
+          
+          -- imprimindo a, b e c 
+          
+          let nc = lines (minusculos txt) --separa o documento em linhas
+          let nl = (mIndexTree (allNumWords (numLines nc))) -- numera as linhas
+          print' nl 
+
+
+--funcao para imprimir
+print' Leaf = return ()
+print' (Node x ls esq dir) = do print' esq
+                                putStrLn (x ++ " " ++ show ls)
+                                print' dir
